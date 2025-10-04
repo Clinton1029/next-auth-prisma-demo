@@ -1,15 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // later: call signIn() from NextAuth
-    setTimeout(() => setLoading(false), 1000);
+    setMessage("");
+
+    const formData = new FormData(e.target);
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (res?.error) {
+      setMessage(`❌ ${res.error}`);
+    } else {
+      setMessage("✅ Login successful!");
+      router.push("/dashboard");
+    }
   };
 
   return (
@@ -18,18 +40,17 @@ export default function LoginPage() {
         <h2 className="text-3xl font-extrabold text-center mb-6 text-gray-900">
           Welcome Back
         </h2>
-        <p className="text-center text-gray-800 font-semibold mb-6">
-          Login to continue to your account
-        </p>
 
         <form onSubmit={handleSubmit} className="space-y-5 font-semibold text-gray-900">
           <input
+            name="email"
             type="email"
             placeholder="Email"
             className="w-full border-2 border-gray-400 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none font-medium text-gray-900 placeholder-gray-700"
             required
           />
           <input
+            name="password"
             type="password"
             placeholder="Password"
             className="w-full border-2 border-gray-400 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none font-medium text-gray-900 placeholder-gray-700"
@@ -45,15 +66,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center font-semibold text-gray-900 mt-6">
-          Don’t have an account?{" "}
-          <a
-            href="/auth/register"
-            className="text-blue-700 font-bold hover:underline hover:text-blue-800"
-          >
-            Register
-          </a>
-        </p>
+        {message && (
+          <p className="mt-4 text-center font-semibold text-gray-900">{message}</p>
+        )}
       </div>
     </div>
   );
