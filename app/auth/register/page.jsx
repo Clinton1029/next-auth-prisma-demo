@@ -4,12 +4,41 @@ import { useState } from "react";
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // later: send POST to /api/users
-    setTimeout(() => setLoading(false), 1000);
+    setMessage("");
+
+    const formData = new FormData(e.target);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+
+    try {
+      const res = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        setMessage("✅ Registration successful! You can now log in.");
+        e.target.reset();
+      } else {
+        setMessage(`❌ ${result.message || "Something went wrong"}`);
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setMessage("⚠️ Failed to connect to server.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -21,23 +50,27 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5 font-semibold text-gray-900">
           <input
+            name="name"
             type="text"
             placeholder="Full Name"
             className="w-full border-2 border-gray-400 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none font-medium text-gray-900 placeholder-gray-700"
             required
           />
           <input
+            name="email"
             type="email"
             placeholder="Email"
             className="w-full border-2 border-gray-400 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none font-medium text-gray-900 placeholder-gray-700"
             required
           />
           <input
+            name="password"
             type="password"
             placeholder="Password"
             className="w-full border-2 border-gray-400 rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none font-medium text-gray-900 placeholder-gray-700"
             required
           />
+
           <button
             type="submit"
             disabled={loading}
@@ -46,6 +79,12 @@ export default function RegisterPage() {
             {loading ? "Creating Account..." : "Register"}
           </button>
         </form>
+
+        {message && (
+          <p className="mt-4 text-center font-semibold text-gray-900">
+            {message}
+          </p>
+        )}
 
         <p className="text-center font-semibold text-gray-900 mt-6">
           Already have an account?{" "}
