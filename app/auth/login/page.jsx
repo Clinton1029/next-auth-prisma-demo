@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
@@ -14,25 +16,30 @@ export default function LoginPage() {
     setMessage("");
 
     try {
-      // ✅ Use absolute URL if needed (especially if using different ports)
       const res = await fetch(`${window.location.origin}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      // Try parsing JSON safely
-      const data = await res.json().catch(() => null);
-
-      console.log("🔍 Response:", data);
+      const data = await res.json();
 
       if (!res.ok) {
-        setMessage(`❌ ${data?.message || "Login failed"}`);
+        setMessage(`❌ ${data.message || "Login failed"}`);
         return;
       }
 
-      // ✅ Success
+      // ✅ Save JWT token in localStorage
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
       setMessage(`✅ ${data.message} — Welcome ${data.user.name}!`);
+
+      // ⏳ Redirect to dashboard after 1 second
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
     } catch (error) {
       console.error("⚠️ Login error:", error);
       setMessage("⚠️ Network error: Unable to reach server.");
