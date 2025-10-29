@@ -15,6 +15,18 @@ Explanation:
 prisma: CLI tool used for schema, migrations, and generation.
 
 @prisma/client: The auto-generated client for your project to query your database.
+
+
+⚙️ 2. Initialize Prisma
+
+npx prisma init
+
+This creates two files:
+
+prisma/
+ └── schema.prisma   ← your database schema
+.env                ← environment variables
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
