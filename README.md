@@ -5,6 +5,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 A complete step-by-step guide for setting up Prisma ORM with PostgreSQL — perfect for integration with Next.js or any Node.js project.
 
 
+
 ```bash
 🧩 1. Install Dependencies
 
@@ -36,6 +37,40 @@ Edit your .env file and set your PostgreSQL connection string:
 DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/prisma_demo?schema=public"
 
 🧠 Replace yourpassword with your actual PostgreSQL password.
+
+✏️ 4. Define Your Prisma Models
+
+Open prisma/schema.prisma and define your models:
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  posts     Post[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+
 
 
 
