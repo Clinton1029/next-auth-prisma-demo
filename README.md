@@ -5,13 +5,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 A complete step-by-step guide for setting up Prisma ORM with PostgreSQL — perfect for integration with Next.js or any Node.js project.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+🧩 1. Install Dependencies
+
+npm install prisma --save-dev
+npm install @prisma/client
+
+Explanation:
+
+prisma: CLI tool used for schema, migrations, and generation.
+
+@prisma/client: The auto-generated client for your project to query your database.
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
