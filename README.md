@@ -76,6 +76,22 @@ model Post {
 
 
 
+🧱 5. Run the First Migration
+
+This applies your schema to the PostgreSQL database.
+
+npx prisma migrate dev --name init
+
+✅ This command:
+
+Creates your database if it doesn’t exist
+
+Creates your tables
+
+Generates the Prisma Client
+
+
+
 
 
 
