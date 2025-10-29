@@ -30,6 +30,8 @@ prisma/
 .env                ← environment variables
 
 
+
+
 🗄️ 3. Set Up PostgreSQL Connection
 
 Edit your .env file and set your PostgreSQL connection string:
@@ -37,6 +39,8 @@ Edit your .env file and set your PostgreSQL connection string:
 DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/prisma_demo?schema=public"
 
 🧠 Replace yourpassword with your actual PostgreSQL password.
+
+
 
 ✏️ 4. Define Your Prisma Models
 
