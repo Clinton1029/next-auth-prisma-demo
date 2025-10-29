@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## 🚀 Prisma + PostgreSQL Crash Course (Full Guide)
 
-First, run the development server:
+A complete step-by-step guide for setting up Prisma ORM with PostgreSQL — perfect for integration with Next.js or any Node.js project.
 
 ```bash
 npm run dev
